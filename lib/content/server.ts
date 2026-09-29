@@ -170,3 +170,28 @@ export async function loadAllSectionsFresh(): Promise<Record<string, { data: Rec
   }
   return out;
 }
+
+/* ---------------------------------------------------------------
+   Alumni (only published profiles with consent ever leave here)
+--------------------------------------------------------------- */
+
+export const ALUMNI_TAG = "alumni";
+
+export const getPublishedAlumni = unstable_cache(
+  async () => {
+    const db = getDb();
+    if (!db) return [];
+    try {
+      return await db
+        .select()
+        .from(schema.alumni)
+        .where(and(eq(schema.alumni.status, "published"), eq(schema.alumni.consentPublic, true)))
+        .orderBy(desc(schema.alumni.featured), desc(schema.alumni.classYear), asc(schema.alumni.fullName));
+    } catch (err) {
+      console.error("Failed to load alumni", err);
+      return [];
+    }
+  },
+  ["alumni-published"],
+  { tags: [ALUMNI_TAG] }
+);

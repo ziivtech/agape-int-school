@@ -7,6 +7,7 @@ import {
   CalendarDays,
   ExternalLink,
   FileText,
+  GraduationCap,
   Image as ImageIcon,
   Inbox,
   LayoutDashboard,
@@ -27,6 +28,7 @@ const NAV = [
   { href: "/admin/media", label: "Photos & media", icon: ImageIcon, area: "media" },
   { href: "/admin/news", label: "News", icon: Newspaper, area: "news" },
   { href: "/admin/events", label: "Events", icon: CalendarDays, area: "events" },
+  { href: "/admin/alumni", label: "Alumni", icon: GraduationCap, area: "alumni" },
   { href: "/admin/users", label: "Staff accounts", icon: Users, area: "users" },
 ];
 

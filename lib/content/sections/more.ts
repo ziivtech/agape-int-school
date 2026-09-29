@@ -4,7 +4,7 @@ import { headingFields, heroFields } from "./shared";
 /* News, events, gallery, alumni and policy pages. */
 
 export const NEWS_CATEGORIES = ["Academics", "Student Life", "Faith", "Sports", "Arts", "Community", "Achievements", "Announcements"];
-export const EVENT_CATEGORIES = ["School", "Academic", "Sports", "Faith", "Arts", "Parents", "Admissions", "Trips", "Holiday"];
+export const EVENT_CATEGORIES = ["School", "Academic", "Sports", "Faith", "Arts", "Parents", "Admissions", "Trips", "Alumni", "Holiday"];
 export const GALLERY_CATEGORIES = ["Classrooms", "Science", "Library", "Sport", "Creative Spaces", "Chapel", "Outdoor", "Student Life", "Events", "Graduation"];
 
 const policy = (heading: string, description: string) =>
@@ -159,7 +159,7 @@ export const moreSections = {
       headingAccent: "Always connected.",
       intro:
         "Graduation is not the end of the story. It is the beginning of a new chapter — and the beginning of an alumni community that continues beyond the school gates.",
-      buttonLabel: "Stay connected",
+      buttonLabel: "Join the alumni network",
       introEyebrow: "Our alumni community",
       introHeading: "Different paths.",
       introAccent: "Shared beginnings.",
@@ -170,8 +170,9 @@ export const moreSections = {
 
   "alumni.stories": defineSection({
     page: "Alumni",
-    label: "2. Stories",
-    description: "Add real alumni here — name, year and where they are now make these far more convincing.",
+    label: "2. Stories (until you feature real alumni)",
+    description:
+      "These appear only while no alumni profile is marked “Featured” in Admin › Alumni. Once you feature real people, their stories replace these.",
     fields: [
       {
         name: "stories",
@@ -198,29 +199,85 @@ export const moreSections = {
           eyebrow: "Shared roots",
           title: "Different destinations. One community.",
           text: "University, entrepreneurship, professional life, service and new opportunities can take alumni in many different directions while the Agape experience remains part of their story.",
-          photo: img("https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=1800&q=85", "Graduates"),
+          photo: img("/grad_01.jpg", "Agape graduates"),
         },
       ],
     },
   }),
 
-  "alumni.legacy": defineSection({
+  "alumni.directory": defineSection({
     page: "Alumni",
-    label: "3. What remains",
+    label: "3. Directory & where alumni are now",
+    description: "The people, numbers, universities and countries all come from approved profiles in Admin › Alumni.",
     fields: [
       ...headingFields,
       { name: "description", label: "Paragraph", type: "textarea" },
-      { name: "values", label: "Values", type: "strings", itemLabel: "Value" },
+      { name: "destinationsHeading", label: "Destinations heading", type: "text" },
+      { name: "emptyText", label: "Text shown before any profiles are approved", type: "textarea" },
+    ],
+    defaults: {
+      eyebrow: "Alumni directory",
+      heading: "Where are they",
+      headingAccent: "now?",
+      description: "Meet Agape graduates studying and working in Ghana and around the world.",
+      destinationsHeading: "Universities our alumni have attended",
+      emptyText: "Our alumni directory is just getting started. Are you an Agape graduate? Add your profile below and be one of the first.",
+    },
+  }),
+
+  "alumni.giveBack": defineSection({
+    page: "Alumni",
+    label: "4. Give back",
+    fields: [
+      ...headingFields,
+      { name: "description", label: "Paragraph", type: "textarea" },
+      {
+        name: "ways",
+        label: "Ways to get involved",
+        type: "list",
+        itemLabel: "Way",
+        fields: [
+          { name: "title", label: "Title", type: "text" },
+          { name: "text", label: "Description", type: "textarea" },
+        ],
+      },
+    ],
+    defaults: {
+      eyebrow: "Give back",
+      heading: "Help the next",
+      headingAccent: "generation.",
+      description: "Current students learn a great deal from people who sat in the same classrooms not long ago.",
+      ways: [
+        { title: "Mentor a student", text: "Share advice on university applications, courses and careers with senior students." },
+        { title: "Speak at careers day", text: "Tell students about your field, how you got there and what you wish you had known." },
+        { title: "Host a visit or placement", text: "Open your workplace for a short visit, job shadowing or an internship." },
+        { title: "Come back and celebrate", text: "Join reunions, graduation and school events as part of the Agape family." },
+      ],
+    },
+  }),
+
+  "alumni.events": defineSection({
+    page: "Alumni",
+    label: "5. Alumni events",
+    description: "Events in Admin › Events with the category “Alumni” appear here.",
+    fields: [
+      { name: "heading", label: "Heading", type: "text" },
+      { name: "emptyText", label: "Text when no alumni events are scheduled", type: "text" },
+    ],
+    defaults: {
+      heading: "Reunions & alumni events",
+      emptyText: "No alumni events are scheduled right now. Join the network below and we'll let you know about the next one.",
+    },
+  }),
+
+  "alumni.legacy": defineSection({
+    page: "Alumni",
+    label: "6. Quote",
+    fields: [
       { name: "quote", label: "Quote (red band)", type: "textarea" },
       { name: "quoteBy", label: "Quote attribution", type: "text" },
     ],
     defaults: {
-      eyebrow: "What remains",
-      heading: "More than a",
-      headingAccent: "school record.",
-      description:
-        "An Agape education is part of a longer journey. The relationships, character, confidence and experiences developed during school can continue to shape the paths students take after graduation.",
-      values: ["Academic foundation", "Christian character", "Confidence to explore", "Commitment to service"],
       quote: "The years at school become part of the story you carry into the world.",
       quoteBy: "Agape Academy International",
     },
@@ -228,18 +285,20 @@ export const moreSections = {
 
   "alumni.connect": defineSection({
     page: "Alumni",
-    label: "4. Stay connected form",
-    description: "Alumni who fill this in appear in Admin › Enquiries as “Alumni”.",
+    label: "7. Join the alumni network (form)",
+    description: "Sign-ups appear in Admin › Alumni as “Waiting for approval”. Nothing is shown publicly until staff approve it.",
     fields: [
       ...headingFields,
       { name: "description", label: "Paragraph", type: "textarea" },
+      { name: "thanks", label: "Message after someone signs up", type: "textarea" },
     ],
     defaults: {
-      eyebrow: "Stay connected",
+      eyebrow: "Join the alumni network",
       heading: "Your Agape story",
       headingAccent: "continues.",
       description:
-        "Tell us where life has taken you. We'll keep you updated about reunions, alumni events and ways to stay involved with the school.",
+        "Tell us where life has taken you. We'll keep you updated about reunions and alumni events, and — if you agree — share your story with the Agape community.",
+      thanks: "Thank you! We'll review your details and be in touch. If you chose to share your profile, it will appear on this page once approved.",
     },
   }),
 

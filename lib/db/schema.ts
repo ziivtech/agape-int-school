@@ -151,6 +151,44 @@ export const enquiryNotes = pgTable("enquiry_notes", {
 });
 
 /* ---------------------------------------------------------------
+   Alumni
+--------------------------------------------------------------- */
+
+export const alumniStatus = pgEnum("alumni_status", ["pending", "published", "hidden"]);
+
+export const alumni = pgTable(
+  "alumni",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    slug: text("slug").notNull().unique(),
+    fullName: text("full_name").notNull(),
+    classYear: integer("class_year"),
+    photoUrl: text("photo_url"),
+    // One line under their name, e.g. "Medical student, University of Ghana".
+    headline: text("headline"),
+    occupation: text("occupation"),
+    industry: text("industry"),
+    university: text("university"),
+    fieldOfStudy: text("field_of_study"),
+    city: text("city"),
+    country: text("country"),
+    story: text("story").notNull().default(""),
+    quote: text("quote"),
+    linkedinUrl: text("linkedin_url"),
+    // Private: never shown on the website.
+    email: text("email"),
+    phone: text("phone"),
+    consentPublic: boolean("consent_public").notNull().default(false),
+    openToMentor: boolean("open_to_mentor").notNull().default(false),
+    featured: boolean("featured").notNull().default(false),
+    status: alumniStatus("status").notNull().default("pending"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("alumni_status_idx").on(t.status), index("alumni_class_year_idx").on(t.classYear)]
+);
+
+/* ---------------------------------------------------------------
    Audit trail
 --------------------------------------------------------------- */
 
@@ -172,3 +210,5 @@ export type Enquiry = typeof enquiries.$inferSelect;
 export type EnquiryStatus = (typeof enquiryStatus.enumValues)[number];
 export type EnquiryType = (typeof enquiryType.enumValues)[number];
 export type GalleryPhotoRow = typeof galleryPhotos.$inferSelect;
+export type Alumnus = typeof alumni.$inferSelect;
+export type AlumniStatus = (typeof alumniStatus.enumValues)[number];

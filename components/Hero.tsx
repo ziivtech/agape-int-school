@@ -39,78 +39,44 @@ export default function Hero() {
       )}
 
       {/* Neutral shading so the text stays readable over any photo */}
-      <div className="pointer-events-none absolute inset-0 bg-black/25" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/50 via-black/10 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-16 sm:pb-20 lg:px-10 lg:pb-24">
-        {/* Eyebrow */}
-        <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-5 flex items-center gap-3"
-        >
-          <span className="h-px w-8 bg-white/60 sm:w-10" />
+      <motion.div
+        initial={prefersReducedMotion ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.9, ease: "easeOut" }}
+        className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-14 sm:pb-20 lg:px-10 lg:pb-24"
+      >
+        <p className="font-sans text-[11px] font-medium uppercase tracking-[0.28em] text-white/60">{c.eyebrow}</p>
 
-          <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70 sm:text-xs">
-            {c.eyebrow}
-          </span>
-        </motion.div>
-
-        <motion.h1
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="max-w-4xl font-serif text-4xl leading-[1.05] text-white sm:text-6xl lg:text-[76px]"
-        >
+        <h1 className="mt-5 max-w-3xl font-serif text-[2.5rem] leading-[1.05] tracking-[-0.02em] text-white sm:text-5xl lg:text-[64px]">
           {c.line1}
-          {c.line2 && (
-            <>
-              <br />
-              {c.line2}
-            </>
-          )}
-          {c.line3 && (
-            <>
-              <br />
-              <span className="text-white/80">{c.line3}</span>
-            </>
-          )}
-        </motion.h1>
+          {c.line2 && <> {c.line2}</>}
+          {c.line3 && <span className="text-white/60"> {c.line3}</span>}
+        </h1>
 
-        <motion.p
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.22 }}
-          className="mt-6 max-w-xl font-sans text-lg leading-relaxed text-white/80"
-        >
-          {c.intro}
-        </motion.p>
+        <p className="mt-6 max-w-md font-sans text-base leading-relaxed text-white/70">{c.intro}</p>
 
-        <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.32 }}
-          className="mt-9 flex flex-wrap items-center gap-4"
-        >
+        <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
           <Link
             href={c.primaryUrl}
-            className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 font-sans text-sm font-medium text-[#19151C] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90"
+            className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 font-sans text-[13px] font-medium text-[#19151C] transition-colors duration-200 hover:bg-white/85"
           >
             {c.primaryLabel}
-            <ArrowRight size={16} />
+            <ArrowRight size={14} />
           </Link>
 
-          <Link
-            href={c.secondaryUrl}
-            className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3.5 font-sans text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10"
-          >
-            {c.secondaryLabel}
-          </Link>
-        </motion.div>
-      </div>
+          {c.secondaryLabel && (
+            <Link
+              href={c.secondaryUrl}
+              className="group inline-flex items-center gap-2 font-sans text-[13px] font-medium text-white/85 transition-colors hover:text-white"
+            >
+              <span className="border-b border-white/30 pb-0.5 transition-colors group-hover:border-white">{c.secondaryLabel}</span>
+            </Link>
+          )}
+        </div>
+      </motion.div>
 
       {/* Small video indicator */}
       {isVideo && (

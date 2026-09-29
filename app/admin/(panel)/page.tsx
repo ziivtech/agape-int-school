@@ -15,12 +15,13 @@ export default async function DashboardPage() {
   const db = requireDb();
   const seesEnquiries = canAccess(session.role, "enquiries");
   const seesContent = canAccess(session.role, "content");
+  const seesAlumni = canAccess(session.role, "alumni");
 
   const monthStart = new Date();
   monthStart.setDate(1);
   monthStart.setHours(0, 0, 0, 0);
 
-  const [statusCounts, [{ thisMonth }], recent, activity, sections] = await Promise.all([
+  const [statusCounts, [{ thisMonth }], recent, activity, sections, [{ pendingAlumni }]] = await Promise.all([
     seesEnquiries
       ? db.select({ status: schema.enquiries.status, count: sql<number>`count(*)::int` }).from(schema.enquiries).groupBy(schema.enquiries.status)
       : Promise.resolve([]),
@@ -35,6 +36,9 @@ export default async function DashboardPage() {
       .orderBy(desc(schema.activityLog.createdAt))
       .limit(8),
     seesContent ? loadAllSectionsFresh() : Promise.resolve({}),
+    seesAlumni
+      ? db.select({ pendingAlumni: sql<number>`count(*)::int` }).from(schema.alumni).where(eq(schema.alumni.status, "pending"))
+      : Promise.resolve([{ pendingAlumni: 0 }]),
   ]);
 
   const counts = Object.fromEntries(statusCounts.map((r) => [r.status, r.count])) as Record<string, number>;
@@ -107,6 +111,14 @@ export default async function DashboardPage() {
         )}
 
         <div className="space-y-6">
+          {pendingAlumni > 0 && (
+            <Link href="/admin/alumni?status=pending" className="block rounded-xl border border-[#6C0798]/25 bg-[#6C0798]/5 p-5 hover:border-[#6C0798]/50">
+              <p className="font-serif text-xl">
+                {pendingAlumni} alumni sign-up{pendingAlumni === 1 ? "" : "s"} to review
+              </p>
+              <p className="mt-1 font-sans text-sm text-[#19151C]/60">Approve them to add them to the alumni directory.</p>
+            </Link>
+          )}
           {seesContent && (
             <Card className="p-5">
               <div className="flex items-start gap-3">

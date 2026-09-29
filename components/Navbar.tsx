@@ -63,6 +63,14 @@ const NAV_ITEMS: MenuGroup[] = [
     ],
   },
   {
+    label: "Community",
+    items: [
+      { label: "News & Stories", href: "/news" },
+      { label: "Events", href: "/events" },
+      { label: "Alumni", href: "/alumni" },
+    ],
+  },
+  {
     label: "Contact",
     href: "/contact",
   },
