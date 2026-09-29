@@ -1,10 +1,5 @@
 import type { Metadata } from "next";
 import { DM_Serif_Display, Manrope } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import Preloader from "@/components/Preloader";
-// import MobileApplyBar from "@/components/MobileApplyBar";
-
 import "./globals.css";
 
 const dmSerif = DM_Serif_Display({
@@ -121,13 +116,7 @@ export default function RootLayout({
       lang="en"
       className={`${dmSerif.variable} ${manrope.variable}`}
     >
-      <body className="bg-[#FAF8F9] pb-16 font-sans text-[#19151C] antialiased lg:pb-0">
-        <Preloader logoSrc="/school_logo.png" />
-        <Navbar />
-        {children}
-        <Footer />
-        {/* <MobileApplyBar /> */}
-      </body>
+      <body className="bg-[#FAF8F9] font-sans text-[#19151C] antialiased">{children}</body>
     </html>
   );
 }

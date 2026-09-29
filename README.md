@@ -303,67 +303,72 @@ Alumni contributions to the school community
 Example route:
 
 /alumni
-12. Content Management System (CMS)
+# 12. Admin: CMS & CRM
 
-A CMS is planned as the content-management layer for the website.
+Staff manage the site at **/admin**. Everything visitors see — text, photos, news, events, the gallery, contact details — is editable there, and every form on the site feeds the enquiries CRM.
 
-The purpose of the CMS is to allow authorised Agape Academy staff to update website content without needing to edit source code.
+| Area | What it does | Roles |
+|---|---|---|
+| Dashboard | New enquiries, pipeline totals, stock photos still to replace, recent activity | all |
+| Enquiries | Every contact / admissions / visit / alumni form submission. Status pipeline (New → Contacted → Visit booked → Applied → Enrolled / Closed), owner, notes timeline, CSV export | admin, admissions |
+| Website content | Every section of every page, grouped by page. Save = live immediately | admin, editor |
+| Photos & media | Every image on the site in one grid, stock photos flagged; the photo gallery | admin, editor |
+| News | Stories with drafts, publish/unpublish, featured story, cover photo | admin, editor |
+| Events | School calendar; past events drop off the site automatically | admin, editor |
+| Staff accounts | Add staff, set roles, reset passwords, deactivate | admin |
 
-The CMS can eventually manage:
+### How content works
 
-Homepage
-Hero content
-Featured stories
-Announcements
-Images
-Calls-to-action
-Gallery
-Upload photographs
-Add titles
-Add descriptions
-Add alt text
-Assign categories
-Feature images
-Reorder images
-Remove images
-News
-Create articles
-Edit articles
-Upload article images
-Add categories
-Add summaries
-Publish/unpublish stories
-Schedule content
-Events
-Create events
-Add dates
-Add locations
-Add descriptions
-Add event imagery
-Publish/unpublish events
-Student Stories
-Student profiles
-Stories
-Quotes
-Portraits
-Achievements
-Admissions
-Admission information
-Requirements
-Important dates
-Fees
-Scholarships
-FAQs
-Academics
-Programme information
-Curriculum information
-Learning support
-Pathways
+- Each editable section is declared once in `lib/content/sections/*.ts` with its fields and **default wording** (the text the site was built with).
+- The database (`content_sections`) only stores sections staff have edited; anything else shows the defaults. "Reset" in the editor deletes the stored copy.
+- Public pages are statically generated and cached. Saving in the admin calls `revalidateTag`, so the change is live on the next page load — no redeploy.
+- To add a new editable section: add it to a file in `lib/content/sections/`, register it in `lib/content/registry.ts`, and read it in a component with `useSection("your.key")`. It appears in the admin automatically.
 
-13. Image Management
+### Security
 
-The recommended image-management architecture uses Cloudinary.
+- Staff sign in with their own email and password (scrypt-hashed). Sessions are signed JWT cookies (`AUTH_SECRET`), 12-hour expiry.
+- `middleware.ts` blocks `/admin` and `/api/admin` without a valid session; each API route also checks the role and that the account is still active.
+- The public enquiry endpoint has a honeypot field and a per-IP rate limit.
 
-Cloudinary acts as the media storage and image delivery layer.
+# 13. Setup & deployment (Neon + Vercel)
 
-Instead of storing uploaded CMS images inside the website's source code, images can be uploaded directly to Cloudinary.
+**Stack:** Next.js 14 on Vercel · Neon Postgres via Drizzle ORM (`@neondatabase/serverless` HTTP driver) · Cloudinary for uploads · optional Resend for enquiry emails.
+
+### First deploy
+
+1. **Create the database.** In Vercel › Storage, add **Neon** and connect it to the project (this sets `DATABASE_URL`). Or create a project at neon.tech and copy the *pooled* connection string.
+2. **Set environment variables** in Vercel (see `.env.example`): `DATABASE_URL`, `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`, `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET`, and optionally the `RESEND_*` / `ENQUIRY_*` ones.
+3. **Create the tables** from your machine:
+   ```bash
+   pnpm install
+   cp .env.example .env.local   # paste the same DATABASE_URL
+   pnpm db:migrate
+   ```
+4. **Deploy** (push to the connected Git branch).
+5. **Create the first admin.** Visit `/admin/login` and sign in with `ADMIN_EMAIL` / `ADMIN_PASSWORD`. Because no accounts exist yet, this creates the admin account. Then change the password under your name, add other staff under *Staff accounts*, and remove `ADMIN_PASSWORD` from Vercel.
+
+### Cloudinary
+
+Create an **unsigned upload preset** (Settings › Upload › Upload presets) and put its name in `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET`. Images are resized and converted to WebP in the browser before upload; delivery adds `f_auto,q_auto` automatically.
+
+### Changing the database schema
+
+Edit `lib/db/schema.ts`, then:
+
+```bash
+pnpm db:generate   # writes a new SQL file to drizzle/
+pnpm db:migrate    # applies it to the database in .env.local
+```
+
+Commit the `drizzle/` folder. `pnpm db:studio` opens a browser view of the data.
+
+### Local development
+
+```bash
+pnpm install
+cp .env.example .env.local   # fill in values (a Neon branch works well for dev)
+pnpm db:migrate
+pnpm dev
+```
+
+Without `DATABASE_URL` the public site still runs using the default content; the admin shows a "database not connected" notice.

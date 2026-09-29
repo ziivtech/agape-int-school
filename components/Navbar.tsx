@@ -5,6 +5,8 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, Menu, X, ChevronDown } from "lucide-react";
 import Image from "next/image";
+import { useSection } from "./content/ContentProvider";
+import AnnouncementBar from "./AnnouncementBar";
 
 type MenuItem = {
   label: string;
@@ -67,6 +69,7 @@ const NAV_ITEMS: MenuGroup[] = [
 ];
 
 export default function Navbar() {
+  const identity = useSection("site.identity");
   const [scrolled, setScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -92,6 +95,7 @@ export default function Navbar() {
       }`}
       onMouseLeave={() => setOpenMenu(null)}
     >
+      <AnnouncementBar />
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
         {/* Logo */}
         <Link
@@ -101,10 +105,11 @@ export default function Navbar() {
           }`}
         >
           <Image
-            src="/school_logo.png"
-            alt="Agape Academy International logo"
+            src={identity.logo.url || "/school_logo.png"}
+            alt={identity.logo.alt || `${identity.schoolName} logo`}
             width={32}
             height={32}
+            unoptimized={identity.logo.url.startsWith("http")}
             className="inline-block h-8 w-8 rounded-lg object-contain"
           />
         </Link>

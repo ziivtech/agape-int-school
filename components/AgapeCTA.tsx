@@ -1,5 +1,6 @@
 "use client";
 
+import { useSection } from "./content/ContentProvider";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -27,10 +28,12 @@ export default function AgapeCTA({
   primaryHref = "/contact",
   secondaryLabel,
   secondaryHref,
-  logoSrc = "/school_logo.png",
+  logoSrc,
   variant = "dark",
 }: AgapeCTAProps) {
   const isDark = variant === "dark";
+  const identity = useSection("site.identity");
+  const logo = logoSrc || identity.logo.url || "/school_logo.png";
 
   return (
     <section className="px-4 py-6 sm:px-6 sm:py-10 lg:px-10">
@@ -79,8 +82,8 @@ export default function AgapeCTA({
                   ].join(" ")}
                 >
                   <img
-                    src={logoSrc}
-                    alt="Agape Academy International"
+                    src={logo}
+                    alt={identity.schoolName}
                     className="h-full w-full object-contain"
                   />
                 </div>

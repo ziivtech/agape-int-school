@@ -2,18 +2,11 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
-import Image from "next/image";
-
-const HIGHLIGHTS = [
-  "International curriculum",
-  "Global university opportunities",
-  "International perspectives",
-  "Cross-cultural learning",
-  "Global citizenship",
-];
+import { useSection } from "./content/ContentProvider";
 
 export default function GlobalPerspective() {
   const prefersReducedMotion = useReducedMotion();
+  const c = useSection("home.global");
 
   return (
     <section className="relative overflow-hidden bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-10 lg:py-36">
@@ -26,9 +19,9 @@ export default function GlobalPerspective() {
         ===================================================== */}
         <div className="relative z-10">
           <SectionHeading
-            eyebrow="Global perspective"
-            heading="Rooted in Ghana. Connected to the world."
-            description="An Agape education prepares students to participate confidently in a global society, while staying firmly connected to their Ghanaian identity."
+            eyebrow={c.eyebrow}
+            heading={c.heading}
+            description={c.description}
           />
 
           <motion.ul
@@ -54,7 +47,7 @@ export default function GlobalPerspective() {
             }}
             className="mt-8 space-y-3"
           >
-            {HIGHLIGHTS.map((item, index) => (
+            {c.highlights.map((item, index) => (
               <motion.li
                 key={item}
                 initial={

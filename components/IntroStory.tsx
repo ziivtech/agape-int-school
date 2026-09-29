@@ -6,19 +6,11 @@ import { ArrowRight } from "lucide-react";
 import SectionHeading from "./SectionHeading";
 import Image from "next/image";
 
-import { useMediaSlot } from "../lib/use-media-slots";
-
-const PILLARS = [
-  { title: "Academic Excellence", body: "A rigorous, well-rounded curriculum that stretches every learner." },
-  { title: "Character Formation", body: "Integrity, discipline and compassion, built into daily school life." },
-  { title: "Faith", body: "A Christ-centered foundation that shapes how students see the world." },
-  { title: "Leadership", body: "Real opportunities to take responsibility, on campus and beyond it." },
-  { title: "Global Perspective", body: "Confidence to participate in the wider world, rooted in Ghanaian identity." },
-];
+import { useSection } from "./content/ContentProvider";
 
 export default function IntroStory() {
   const prefersReducedMotion = useReducedMotion();
-  const slot = useMediaSlot("home_intro_cover");
+  const c = useSection("home.intro");
 
   return (
     <section id="our-story" className="px-6 py-20 sm:py-28 lg:px-10">
@@ -32,26 +24,26 @@ export default function IntroStory() {
         >
           {/* Editorial photograph — a teacher and students in conversation */}
           <Image
-            src={slot.currentUrl || "/cover.jpg"}
-            alt={slot.altText || "Teacher speaking with Agape Academy students"}
+            src={c.photo.url || "/cover.jpg"}
+            alt={c.photo.alt}
             width={800}
             height={1000}
             priority
             quality={90}
-            unoptimized={Boolean(slot.currentUrl && slot.currentUrl.includes("res.cloudinary.com"))}
+            unoptimized={c.photo.url.startsWith("http")}
             className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
           />
         </motion.div>
 
         <div className="lg:order-1">
           <SectionHeading
-            eyebrow="Our philosophy"
-            heading="More than an education. A foundation for life."
-            description="At Agape Academy International, we prepare students not simply to pass examinations, but to become thoughtful, capable and principled young people who can contribute to Ghana and the wider world."
+            eyebrow={c.eyebrow}
+            heading={c.heading}
+            description={c.description}
           />
 
           <div className="mt-10 space-y-6">
-            {PILLARS.map((pillar) => (
+            {c.pillars.map((pillar) => (
               <div key={pillar.title} className="border-l-2 border-[#6C0798]/25 pl-5">
                 <h3 className="font-serif text-lg text-[#19151C]">{pillar.title}</h3>
                 <p className="mt-1 font-sans text-sm leading-relaxed text-[#19151C]/65">
@@ -65,7 +57,7 @@ export default function IntroStory() {
             href="/about"
             className="mt-10 inline-flex items-center gap-2 font-sans text-sm font-medium text-[#6C0798] hover:text-[#4B075F]"
           >
-            Discover our story
+            {c.linkLabel}
             <ArrowRight size={16} />
           </Link>
         </div>

@@ -1,130 +1,55 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase, isSupabaseConfigured } from "../../../../lib/supabase";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { requireDb, schema } from "../../../../lib/db";
+import { handle, HttpError, logActivity, requireArea } from "../../../../lib/auth/server";
+import { GALLERY_TAG, refreshContent } from "../../../../lib/content/server";
+import { linkSchema } from "../../../../lib/enquiries";
 
-export async function GET() {
-  try {
-    if (!isSupabaseConfigured() || !supabase) {
-      return NextResponse.json({
-        success: true,
-        photos: [],
-        isSupabaseConnected: false,
-      });
-    }
+const photoSchema = z.object({
+  category: z.string().trim().min(1).max(60),
+  title: z.string().trim().min(1).max(160),
+  caption: z.string().trim().max(500).default(""),
+  url: linkSchema.refine((v) => v.length > 0, "Missing photo."),
+  publicId: z.string().max(300).nullish(),
+  sortOrder: z.number().int().default(0),
+});
 
-    const { data, error } = await supabase
-      .from("campus_gallery")
-      .select("*")
-      .order("sort_order", { ascending: true })
-      .order("created_at", { ascending: false });
+export const POST = handle(async (req: NextRequest) => {
+  const session = await requireArea("media");
+  const parsed = photoSchema.safeParse(await req.json());
+  if (!parsed.success) throw new HttpError(400, parsed.error.issues[0]?.message ?? "Invalid photo.");
 
-    if (error) {
-      throw error;
-    }
+  const [photo] = await requireDb().insert(schema.galleryPhotos).values(parsed.data).returning();
+  refreshContent(GALLERY_TAG);
+  await logActivity(session.userId, "create", "gallery", photo.id, `Added “${photo.title}” to the gallery`);
+  return NextResponse.json({ success: true, photo });
+});
 
-    return NextResponse.json({
-      success: true,
-      photos: data || [],
-      isSupabaseConnected: true,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: (error as Error).message },
-      { status: 500 }
-    );
-  }
-}
+export const PATCH = handle(async (req: NextRequest) => {
+  const session = await requireArea("media");
+  const body = await req.json();
+  if (typeof body.id !== "string") throw new HttpError(400, "Missing photo id.");
+  const parsed = photoSchema.partial().safeParse(body);
+  if (!parsed.success) throw new HttpError(400, parsed.error.issues[0]?.message ?? "Invalid photo.");
 
-export async function POST(req: NextRequest) {
-  try {
-    const token = req.cookies.get("aai_admin_token")?.value;
-    if (token !== "authenticated") {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+  const [photo] = await requireDb()
+    .update(schema.galleryPhotos)
+    .set(parsed.data)
+    .where(eq(schema.galleryPhotos.id, body.id))
+    .returning();
+  if (!photo) throw new HttpError(404, "Photo not found.");
+  refreshContent(GALLERY_TAG);
+  await logActivity(session.userId, "update", "gallery", photo.id, `Edited gallery photo “${photo.title}”`);
+  return NextResponse.json({ success: true, photo });
+});
 
-    if (!isSupabaseConfigured() || !supabase) {
-      return NextResponse.json(
-        { success: false, error: "Supabase is not configured." },
-        { status: 503 }
-      );
-    }
-
-    const body = await req.json();
-    const { category, title, caption, cloudinary_url, cloudinary_public_id, sort_order } = body;
-
-    if (!category || !title || !cloudinary_url) {
-      return NextResponse.json(
-        { success: false, error: "Missing required fields (category, title, cloudinary_url)" },
-        { status: 400 }
-      );
-    }
-
-    const { data, error } = await supabase
-      .from("campus_gallery")
-      .insert([
-        {
-          category,
-          title,
-          caption: caption || "",
-          cloudinary_url,
-          cloudinary_public_id: cloudinary_public_id || null,
-          sort_order: sort_order || 0,
-        },
-      ])
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    return NextResponse.json({
-      success: true,
-      photo: data,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: (error as Error).message },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(req: NextRequest) {
-  try {
-    const token = req.cookies.get("aai_admin_token")?.value;
-    if (token !== "authenticated") {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    if (!isSupabaseConfigured() || !supabase) {
-      return NextResponse.json(
-        { success: false, error: "Supabase is not configured." },
-        { status: 503 }
-      );
-    }
-
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
-
-    if (!id) {
-      return NextResponse.json(
-        { success: false, error: "Missing photo id" },
-        { status: 400 }
-      );
-    }
-
-    const { error } = await supabase.from("campus_gallery").delete().eq("id", id);
-    if (error) throw error;
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: (error as Error).message },
-      { status: 500 }
-    );
-  }
-}
+export const DELETE = handle(async (req: NextRequest) => {
+  const session = await requireArea("media");
+  const id = new URL(req.url).searchParams.get("id");
+  if (!id) throw new HttpError(400, "Missing photo id.");
+  await requireDb().delete(schema.galleryPhotos).where(eq(schema.galleryPhotos.id, id));
+  refreshContent(GALLERY_TAG);
+  await logActivity(session.userId, "delete", "gallery", id, "Removed a gallery photo");
+  return NextResponse.json({ success: true });
+});

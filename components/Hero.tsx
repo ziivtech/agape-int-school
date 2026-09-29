@@ -4,14 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
-import { useMediaSlot } from "../lib/use-media-slots";
-import { isCloudinaryUrl, isCloudinaryVideoUrl } from "../lib/cloudinary";
+import { isCloudinaryVideoUrl } from "../lib/cloudinary";
+import { useSection } from "./content/ContentProvider";
 
 export default function Hero() {
   const prefersReducedMotion = useReducedMotion();
-  const heroSlot = useMediaSlot("home_hero");
-  const isVideo = isCloudinaryVideoUrl(heroSlot.currentUrl);
-  const hasCustomMedia = Boolean(heroSlot.currentUrl && isCloudinaryUrl(heroSlot.currentUrl));
+  const c = useSection("home.hero");
+  const bg = c.background;
+  const isVideo = isCloudinaryVideoUrl(bg.url);
+  const hasCustomMedia = Boolean(bg.url);
 
   return (
     <section className="relative flex h-[92vh] min-h-[620px] w-full items-end overflow-hidden bg-[#19151C]">
@@ -23,13 +24,13 @@ export default function Hero() {
           muted
           playsInline
           className="absolute inset-0 h-full w-full object-cover opacity-50"
-          src={heroSlot.currentUrl}
+          src={bg.url}
         />
       )}
       {hasCustomMedia && !isVideo && (
         <Image
-          src={heroSlot.currentUrl}
-          alt={heroSlot.altText || "Agape Academy campus and students"}
+          src={bg.url}
+          alt={bg.alt}
           fill
           priority
           unoptimized
@@ -53,7 +54,7 @@ export default function Hero() {
           <span className="h-px w-8 bg-[#E12F41] sm:w-10" />
 
           <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70 sm:text-xs">
-            Agape Academy International
+            {c.eyebrow}
           </span>
         </motion.div>
 
@@ -63,11 +64,19 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="max-w-4xl font-serif text-4xl leading-[1.05] text-white sm:text-6xl lg:text-[76px]"
         >
-          Academic excellence.
-          <br />
-          Christian character.
-          <br />
-          <span className="text-white/80">Global purpose.</span>
+          {c.line1}
+          {c.line2 && (
+            <>
+              <br />
+              {c.line2}
+            </>
+          )}
+          {c.line3 && (
+            <>
+              <br />
+              <span className="text-white/80">{c.line3}</span>
+            </>
+          )}
         </motion.h1>
 
         <motion.p
@@ -76,8 +85,7 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.22 }}
           className="mt-6 max-w-xl font-sans text-lg leading-relaxed text-white/80"
         >
-          Preparing young people to learn deeply, lead courageously and live
-          with purpose.
+          {c.intro}
         </motion.p>
 
         <motion.div
@@ -87,23 +95,24 @@ export default function Hero() {
           className="mt-9 flex flex-wrap items-center gap-4"
         >
           <Link
-            href="#our-story"
+            href={c.primaryUrl}
             className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 font-sans text-sm font-medium text-[#19151C] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90"
           >
-            Explore Agape
+            {c.primaryLabel}
             <ArrowRight size={16} />
           </Link>
 
           <Link
-            href="/admissions#book-a-visit"
+            href={c.secondaryUrl}
             className="inline-flex items-center gap-2 rounded-full border border-white/40 px-6 py-3.5 font-sans text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10"
           >
-            Book a Visit
+            {c.secondaryLabel}
           </Link>
         </motion.div>
       </div>
 
       {/* Small video indicator */}
+      {isVideo && (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -118,6 +127,7 @@ export default function Hero() {
           Life at Agape
         </span>
       </motion.div>
+      )}
     </section>
   );
 }

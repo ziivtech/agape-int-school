@@ -19,51 +19,18 @@ import {
   Stagger,
   StaggerItem,
 } from "@/components/Animations";
+import { useSection } from "@/components/content/ContentProvider";
 
-export type StudentLifeSubpageData = {
-  eyebrow: string;
-  title: string;
-  highlight: string;
-  description: string;
-  heroImage: string;
-  heroAlt: string;
+type SubpageKey =
+  | "studentLife.clubs"
+  | "studentLife.sports"
+  | "studentLife.arts"
+  | "studentLife.leadership"
+  | "studentLife.trips"
+  | "studentLife.studentUnion";
 
-  stats: {
-    value: string;
-    label: string;
-  }[];
-
-  introEyebrow: string;
-  introTitle: string;
-  introText: string;
-
-  features: {
-    number: string;
-    title: string;
-    text: string;
-    image: string;
-    imageAlt: string;
-  }[];
-
-  experienceEyebrow: string;
-  experienceTitle: string;
-  experienceText: string;
-
-  listTitle: string;
-  listItems: string[];
-
-  quote: string;
-  quoteLabel: string;
-
-  ctaTitle: string;
-  ctaText: string;
-};
-
-export default function StudentLifeSubpage({
-  data,
-}: {
-  data: StudentLifeSubpageData;
-}) {
+export default function StudentLifeSubpage({ sectionKey }: { sectionKey: SubpageKey }) {
+  const data = useSection(sectionKey);
   return (
     <main className="overflow-hidden bg-[#FAF8F9] text-[#19151C]">
       {/* =========================================================
@@ -76,14 +43,17 @@ export default function StudentLifeSubpage({
           transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
           className="absolute inset-[-5%]"
         >
-          <Image
-            src={data.heroImage}
-            alt={data.heroAlt}
-            className="h-full w-full"
-            fill
-            quality={90}
-            priority
-          />
+          {data.hero.url && (
+            <Image
+              src={data.hero.url}
+              alt={data.hero.alt}
+              className="h-full w-full object-cover"
+              fill
+              quality={90}
+              priority
+              unoptimized={data.hero.url.startsWith("http")}
+            />
+          )}
         </motion.div>
 
         <div className="absolute inset-0 bg-[#19151C]/55" />
@@ -197,7 +167,7 @@ export default function StudentLifeSubpage({
 
           return (
             <div
-              key={feature.number}
+              key={feature.title + index}
               className="mx-auto grid max-w-[1500px] lg:grid-cols-2"
             >
               <Reveal
@@ -205,19 +175,21 @@ export default function StudentLifeSubpage({
                 className={reversed ? "lg:order-2" : ""}
               >
                 <div className="relative min-h-[380px] overflow-hidden sm:min-h-[520px] lg:min-h-[680px]">
-                  <Image
-                    src={feature.image}
-                    alt={feature.imageAlt}
-                    fill
-                    quality={90}
-                    className="absolute inset-0 object-cover"
-                    priority
-                  />
+                  {feature.photo.url && (
+                    <Image
+                      src={feature.photo.url}
+                      alt={feature.photo.alt}
+                      fill
+                      quality={90}
+                      className="absolute inset-0 object-cover"
+                      unoptimized={feature.photo.url.startsWith("http")}
+                    />
+                  )}
 
                   <div className="absolute inset-0 bg-gradient-to-t from-[#19151C]/75 via-transparent to-transparent" />
 
                   <span className="absolute bottom-6 left-6 font-serif text-7xl text-white/20 sm:bottom-10 sm:left-10 sm:text-9xl">
-                    {feature.number}
+                    {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
               </Reveal>
@@ -230,7 +202,7 @@ export default function StudentLifeSubpage({
                 <div className="max-w-xl">
                   <FadeUp>
                     <span className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-[#E12F41]">
-                      {feature.number}
+                      {String(index + 1).padStart(2, "0")}
                     </span>
                   </FadeUp>
 
@@ -357,7 +329,7 @@ export default function StudentLifeSubpage({
             <FadeUp>
               <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
                 <Link
-                  href="/admissions/apply"
+                  href="/admissions#how-to-apply"
                   className="group inline-flex h-13 items-center justify-center gap-3 rounded-full bg-white px-7 py-4 font-sans text-sm font-semibold text-[#19151C] transition hover:bg-[#E12F41] hover:text-white"
                 >
                   Apply to Agape
@@ -365,7 +337,7 @@ export default function StudentLifeSubpage({
                 </Link>
 
                 <Link
-                  href="/contact"
+                  href="/admissions#book-a-visit"
                   className="inline-flex h-13 items-center justify-center rounded-full border border-white/15 px-7 py-4 font-sans text-sm font-semibold text-white transition hover:bg-white/10"
                 >
                   Book a visit
