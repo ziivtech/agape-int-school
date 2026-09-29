@@ -1,41 +1,84 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
 import { isCloudinaryVideoUrl } from "../lib/cloudinary";
 import { useSection } from "./content/ContentProvider";
+
+const SLIDE_MS = 6500;
 
 export default function Hero() {
   const prefersReducedMotion = useReducedMotion();
   const c = useSection("home.hero");
   const bg = c.background;
-  const isVideo = isCloudinaryVideoUrl(bg.url);
-  const hasCustomMedia = Boolean(bg.url);
+  const slides = c.slides.filter((s) => s.photo.url);
+  const useSlides = slides.length > 0;
+  const isVideo = !useSlides && isCloudinaryVideoUrl(bg.url);
+
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  // Advance automatically; restarting the timer whenever the slide changes
+  // means a click on an indicator gets the full interval too.
+  useEffect(() => {
+    if (slides.length < 2 || paused || prefersReducedMotion) return;
+    const t = setTimeout(() => setIndex((i) => (i + 1) % slides.length), SLIDE_MS);
+    return () => clearTimeout(t);
+  }, [index, slides.length, paused, prefersReducedMotion]);
+
+  // Pause while the tab is hidden so it doesn't race ahead in the background.
+  useEffect(() => {
+    const onVis = () => setPaused(document.hidden);
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
+
+  const current = slides[index % Math.max(slides.length, 1)];
 
   return (
     <section className="relative flex h-[92vh] min-h-[620px] w-full items-end overflow-hidden bg-[#19151C]">
-      {/* Background Video / Photo (from Media CMS when uploaded to Cloudinary) */}
-      {hasCustomMedia && isVideo && (
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-          src={bg.url}
-        />
+      {useSlides ? (
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={index}
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.4, ease: "easeInOut" }}
+          >
+            <motion.div
+              className="absolute inset-0"
+              initial={{ scale: prefersReducedMotion ? 1 : 1.08 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: (SLIDE_MS + 1400) / 1000, ease: "linear" }}
+            >
+              <Image
+                src={current.photo.url}
+                alt={current.photo.alt}
+                fill
+                priority={index === 0}
+                unoptimized
+                sizes="100vw"
+                className="object-cover object-center"
+              />
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
+      ) : (
+        <>
+          {isVideo && <video autoPlay loop muted playsInline className="absolute inset-0 h-full w-full object-cover" src={bg.url} />}
+          {!isVideo && bg.url && <Image src={bg.url} alt={bg.alt} fill priority unoptimized className="object-cover object-center" />}
+        </>
       )}
-      {hasCustomMedia && !isVideo && (
-        <Image
-          src={bg.url}
-          alt={bg.alt}
-          fill
-          priority
-          unoptimized
-          className="object-cover object-center"
-        />
+
+      {/* Preload the next slide so the fade never shows a blank frame */}
+      {slides.length > 1 && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={slides[(index + 1) % slides.length].photo.url} alt="" aria-hidden="true" className="hidden" />
       )}
 
       {/* Neutral shading so the text stays readable over any photo */}
@@ -77,6 +120,37 @@ export default function Hero() {
           )}
         </div>
       </motion.div>
+
+      {/* Slide indicators */}
+      {slides.length > 1 && (
+        <div className="absolute bottom-8 right-6 z-10 flex items-center gap-4 sm:bottom-10 lg:right-10">
+          {current?.caption && <span className="hidden font-sans text-xs text-white/60 sm:block">{current.caption}</span>}
+          <div className="flex gap-2" role="tablist" aria-label="Hero photos">
+            {slides.map((s, i) => (
+              <button
+                key={i}
+                role="tab"
+                aria-selected={i === index}
+                aria-label={`Show photo ${i + 1}${s.photo.alt ? `: ${s.photo.alt}` : ""}`}
+                onClick={() => setIndex(i)}
+                className="group relative h-6 w-8 sm:w-10"
+              >
+                <span className="absolute inset-x-0 top-1/2 h-[2px] -translate-y-1/2 overflow-hidden rounded-full bg-white/30 group-hover:bg-white/50">
+                  {i === index && (
+                    <motion.span
+                      key={`${index}-${paused}`}
+                      className="absolute inset-y-0 left-0 bg-white"
+                      initial={{ width: prefersReducedMotion || paused ? "100%" : "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: prefersReducedMotion || paused ? 0 : SLIDE_MS / 1000, ease: "linear" }}
+                    />
+                  )}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Small video indicator */}
       {isVideo && (

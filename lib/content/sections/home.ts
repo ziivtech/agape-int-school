@@ -10,7 +10,18 @@ export const homeSections = {
     page: "Homepage",
     label: "1. Hero (top of page)",
     fields: [
-      { name: "background", label: "Background photo or video", type: "image", aspect: "16:9", help: "A short muted video (MP4) also works." },
+      {
+        name: "slides",
+        label: "Slideshow photos",
+        type: "list",
+        itemLabel: "Slide",
+        help: "The hero fades between these photos every few seconds. Use wide, landscape photos (at least 1920px wide). Remove them all to use the single background below instead.",
+        fields: [
+          { name: "photo", label: "Photo", type: "image", aspect: "16:9" },
+          { name: "caption", label: "Caption (optional, shown small in the corner)", type: "text" },
+        ],
+      },
+      { name: "background", label: "Single background photo or video (used when there are no slides)", type: "image", aspect: "16:9", help: "A short muted video (MP4) also works." },
       { name: "eyebrow", label: "Small label", type: "text" },
       { name: "line1", label: "Headline line 1", type: "text" },
       { name: "line2", label: "Headline line 2", type: "text" },
@@ -22,6 +33,12 @@ export const homeSections = {
       { name: "secondaryUrl", label: "Second button link", type: "url" },
     ],
     defaults: {
+      slides: [
+        { photo: img("/banner.jpg", "Agape Academy campus and students"), caption: "" },
+        { photo: img("/grad_01.jpg", "Agape graduates celebrating"), caption: "" },
+        { photo: img("/games_3.jpg", "Students competing on sports day"), caption: "" },
+        { photo: img("/together.jpg", "Students together on campus"), caption: "" },
+      ],
       background: img("/banner.jpg", "Agape Academy campus and students"),
       eyebrow: "Agape Academy International",
       line1: "Academic excellence.",
