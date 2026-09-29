@@ -23,7 +23,7 @@ export default function Hero() {
           loop
           muted
           playsInline
-          className="absolute inset-0 h-full w-full object-cover opacity-50"
+          className="absolute inset-0 h-full w-full object-cover"
           src={bg.url}
         />
       )}
@@ -34,13 +34,14 @@ export default function Hero() {
           fill
           priority
           unoptimized
-          className="object-cover object-center opacity-50"
+          className="object-cover object-center"
         />
       )}
 
-      {/* Signature brand gradients (always preserves original brand colors and contrast) */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#4B075F] via-[#19151C] to-[#6C0798]/40" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#19151C] via-[#19151C]/20 to-transparent" />
+      {/* Neutral shading so the text stays readable over any photo */}
+      <div className="pointer-events-none absolute inset-0 bg-black/25" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/50 via-black/10 to-transparent" />
 
       {/* Content */}
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-16 sm:pb-20 lg:px-10 lg:pb-24">
@@ -51,7 +52,7 @@ export default function Hero() {
           transition={{ duration: 0.6 }}
           className="mb-5 flex items-center gap-3"
         >
-          <span className="h-px w-8 bg-[#E12F41] sm:w-10" />
+          <span className="h-px w-8 bg-white/60 sm:w-10" />
 
           <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70 sm:text-xs">
             {c.eyebrow}
