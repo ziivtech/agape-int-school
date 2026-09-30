@@ -9,6 +9,7 @@ import {
   date,
   pgEnum,
   index,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 
 /* ---------------------------------------------------------------
@@ -49,6 +50,8 @@ export const galleryPhotos = pgTable("gallery_photos", {
   url: text("url").notNull(),
   publicId: text("public_id"),
   sortOrder: integer("sort_order").notNull().default(0),
+  // Photos in an album are deleted with it; photos without one are the general gallery.
+  albumId: uuid("album_id").references((): AnyPgColumn => albums.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -94,6 +97,28 @@ export const events = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("events_starts_on_idx").on(t.startsOn)]
+);
+
+/* ---------------------------------------------------------------
+   Photo albums (e.g. "Sports Day 2026")
+--------------------------------------------------------------- */
+
+export const albums = pgTable(
+  "albums",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    slug: text("slug").notNull().unique(),
+    title: text("title").notNull(),
+    description: text("description").notNull().default(""),
+    date: date("date"),
+    coverUrl: text("cover_url"),
+    eventId: uuid("event_id").references(() => events.id, { onDelete: "set null" }),
+    newsPostId: uuid("news_post_id").references(() => newsPosts.id, { onDelete: "set null" }),
+    published: boolean("published").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("albums_date_idx").on(t.date)]
 );
 
 /* ---------------------------------------------------------------
@@ -189,6 +214,32 @@ export const alumni = pgTable(
 );
 
 /* ---------------------------------------------------------------
+   Downloads centre
+--------------------------------------------------------------- */
+
+export const downloads = pgTable(
+  "downloads",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    title: text("title").notNull(),
+    description: text("description").notNull().default(""),
+    category: text("category").notNull(),
+    fileUrl: text("file_url").notNull(),
+    fileName: text("file_name"),
+    // e.g. "pdf", "docx"
+    fileType: text("file_type"),
+    fileSize: integer("file_size"),
+    publicId: text("public_id"),
+    published: boolean("published").notNull().default(true),
+    sortOrder: integer("sort_order").notNull().default(0),
+    downloadCount: integer("download_count").notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("downloads_category_idx").on(t.category, t.sortOrder)]
+);
+
+/* ---------------------------------------------------------------
    Audit trail
 --------------------------------------------------------------- */
 
@@ -212,3 +263,5 @@ export type EnquiryType = (typeof enquiryType.enumValues)[number];
 export type GalleryPhotoRow = typeof galleryPhotos.$inferSelect;
 export type Alumnus = typeof alumni.$inferSelect;
 export type AlumniStatus = (typeof alumniStatus.enumValues)[number];
+export type DownloadRow = typeof downloads.$inferSelect;
+export type AlbumRow = typeof albums.$inferSelect;

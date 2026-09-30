@@ -10,6 +10,7 @@ export const PAGE_URLS: Record<string, string> = {
   News: "/news",
   Events: "/events",
   Gallery: "/gallery",
+  Downloads: "/downloads",
   Alumni: "/alumni",
   Policies: "/privacy",
 };

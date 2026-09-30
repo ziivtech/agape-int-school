@@ -29,7 +29,7 @@ export default async function NewsAdminPage() {
         <Card className="p-10 text-center">
           <p className="font-serif text-2xl">No stories yet</p>
           <p className="mt-2 font-sans text-sm text-[#19151C]/55">
-            Sports day results, a trip, an achievement, a chapel reflection — short, real stories work best.
+            Sports day results, a trip, an achievement, a chapel reflection. Short, real stories work best.
           </p>
         </Card>
       ) : (

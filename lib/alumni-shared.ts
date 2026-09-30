@@ -58,7 +58,7 @@ export function toAlumniCard(a: Alumnus): AlumniCard {
   };
 }
 
-/** "Medical student, University of Ghana" — falls back to what we know. */
+/** "Medical student, University of Ghana", falling back to what we know. */
 export function alumniSubtitle(a: Pick<AlumniCard, "headline" | "occupation" | "university">) {
   return a.headline || a.occupation || a.university;
 }

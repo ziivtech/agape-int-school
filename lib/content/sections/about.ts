@@ -60,14 +60,14 @@ export const aboutSections = {
         "We envision a community where students grow into confident, principled and capable individuals who use their knowledge, character and gifts to serve others and shape the future.",
       missionTitle: "Academic excellence in Christ.",
       missionBody:
-        "We provide an academically ambitious and nurturing education that develops the whole child — intellectually, socially, emotionally, physically and spiritually — within a community shaped by Christian values.",
+        "We provide an academically ambitious and nurturing education that develops the whole child (intellectually, socially, emotionally, physically and spiritually) within a community shaped by Christian values.",
     },
   }),
 
   "about.leadership": defineSection({
     page: "About",
     label: "4. Leadership & staff",
-    description: "Add real leadership team members under “People” — they appear with their photos. The cards below describe your approach.",
+    description: "Add real leadership team members under “People” and they appear with their photos. The cards below describe your approach.",
     fields: [
       ...headingFields,
       { name: "description", label: "Paragraph", type: "textarea" },
@@ -166,7 +166,7 @@ export const aboutSections = {
       ...headingFields,
       { name: "paragraphs", label: "Paragraphs", type: "strings", itemLabel: "Paragraph" },
       { name: "linkLabel", label: "Link text", type: "text" },
-      { name: "photo", label: "Photo (optional — replaces the purple quote card)", type: "image", aspect: "4:5" },
+      { name: "photo", label: "Photo (optional, replaces the purple quote card)", type: "image", aspect: "4:5" },
       { name: "quote", label: "Quote card text", type: "text" },
       { name: "quoteNote", label: "Quote card caption", type: "textarea" },
     ],

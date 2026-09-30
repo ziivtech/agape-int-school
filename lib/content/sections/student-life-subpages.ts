@@ -122,7 +122,7 @@ export const studentLifeSubpageSections = {
       title: "Compete with",
       highlight: "purpose.",
       description:
-        "Sport gives students another classroom — one where discipline, teamwork, resilience and confidence are developed through movement and competition.",
+        "Sport gives students another classroom, one where discipline, teamwork, resilience and confidence are developed through movement and competition.",
       hero: img("/games_3.jpg", "Students participating in sport at Agape Academy International"),
 
       stats: [
@@ -153,7 +153,7 @@ export const studentLifeSubpageSections = {
         {
           title: "Grow beyond the field",
           text:
-            "The habits developed through sport — preparation, perseverance and teamwork — become part of a student's wider development.",
+            "The habits developed through sport (preparation, perseverance and teamwork) become part of a student's wider development.",
           photo: img("https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&w=1800&q=90", "Students participating in athletics"),
         },
       ],
@@ -232,7 +232,7 @@ export const studentLifeSubpageSections = {
       experienceEyebrow: "Creative life",
       experienceTitle: "Ideas become visible.",
       experienceText:
-        "Creative experiences allow students to develop a sense of authorship — the confidence to say, make and perform something that began with their own imagination.",
+        "Creative experiences allow students to develop a sense of authorship: the confidence to say, make and perform something that began with their own imagination.",
 
       listTitle: "Creative opportunities",
       listItems: [
@@ -277,7 +277,7 @@ export const studentLifeSubpageSections = {
       introEyebrow: "Character in action",
       introTitle: "Leadership begins with responsibility.",
       introText:
-        "Students develop leadership by being trusted with real responsibilities. They learn that leadership is not simply about being visible — it is about listening, serving, following through and helping others succeed.",
+        "Students develop leadership by being trusted with real responsibilities. They learn that leadership is not simply about being visible. It is about listening, serving, following through and helping others succeed.",
 
       features: [
         {
@@ -289,7 +289,7 @@ export const studentLifeSubpageSections = {
         {
           title: "Serve others",
           text:
-            "Service helps students understand leadership as contribution — using their abilities to make a positive difference for people around them.",
+            "Service helps students understand leadership as contribution, using their abilities to make a positive difference for people around them.",
           photo: img("https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1800&q=90", "Students involved in community service"),
         },
         {

@@ -173,7 +173,7 @@ export default function EnquiryDetail({
             <div className="border-t border-[#19151C]/10 p-5">
               <textarea
                 className={`${inputClass} min-h-[80px]`}
-                placeholder="Add a note — e.g. “Called mum, visit arranged for Tuesday 10am”"
+                placeholder="Add a note, e.g. “Called mum, visit arranged for Tuesday 10am”"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               />

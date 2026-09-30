@@ -60,6 +60,7 @@ const NAV_ITEMS: MenuGroup[] = [
       { label: "Scholarships", href: "/admissions#scholarships" },
       { label: "International Students", href: "/admissions#international" },
       { label: "Book a Visit", href: "/admissions#book-a-visit" },
+      { label: "Prospectus & Downloads", href: "/downloads" },
     ],
   },
   {

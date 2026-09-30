@@ -22,6 +22,7 @@ const COLUMNS = [
       { label: "Scholarships", href: "/admissions#scholarships" },
       { label: "International Students", href: "/admissions#international" },
       { label: "Book a Visit", href: "/admissions#book-a-visit" },
+      { label: "Downloads", href: "/downloads" },
     ],
   },
   {

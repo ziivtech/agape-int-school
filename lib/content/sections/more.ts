@@ -55,7 +55,7 @@ export const moreSections = {
       introAccent: "remembering.",
       introParagraphs: [
         "School life is made up of thousands of moments. A question asked in class. A goal scored. A song performed. A new friendship. A lesson in chapel.",
-        "Our news and stories bring those moments together — celebrating the people, ideas and experiences that make Agape Academy International what it is.",
+        "Our news and stories bring those moments together, celebrating the people, ideas and experiences that make Agape Academy International what it is.",
       ],
       emptyText: "Our first stories are on their way. Check back soon.",
     },
@@ -122,6 +122,26 @@ export const moreSections = {
     },
   }),
 
+  "downloads.page": defineSection({
+    page: "Downloads",
+    label: "Downloads page",
+    description: "The files themselves are managed under Admin › Downloads.",
+    fields: [
+      { name: "eyebrow", label: "Small label", type: "text" },
+      { name: "heading", label: "Heading", type: "text" },
+      { name: "description", label: "Paragraph", type: "textarea" },
+      { name: "emptyText", label: "Text shown when there are no files yet", type: "textarea" },
+      { name: "helpText", label: "Help line at the bottom", type: "text" },
+    ],
+    defaults: {
+      eyebrow: "Downloads",
+      heading: "Documents for families",
+      description: "Prospectus, fee schedules, term calendars, uniform lists and forms, all in one place.",
+      emptyText: "Documents will be available here soon. In the meantime, contact the school office and we'll send you what you need.",
+      helpText: "Can't find what you're looking for? Contact the school office and we'll send it to you.",
+    },
+  }),
+
   "gallery.page": defineSection({
     page: "Gallery",
     label: "Gallery page header",
@@ -137,7 +157,7 @@ export const moreSections = {
       heading: "A place to learn.",
       headingAccent: "A place to belong.",
       description:
-        "Classrooms and chapel, science labs and sports fields, quiet corners and shared ones — this is what a day at Agape looks like.",
+        "Classrooms and chapel, science labs and sports fields, quiet corners and shared ones. This is what a day at Agape looks like.",
     },
   }),
 
@@ -158,7 +178,7 @@ export const moreSections = {
       heading: "Once Agape.",
       headingAccent: "Always connected.",
       intro:
-        "Graduation is not the end of the story. It is the beginning of a new chapter — and the beginning of an alumni community that continues beyond the school gates.",
+        "Graduation is not the end of the story. It is the beginning of a new chapter, and of an alumni community that continues beyond the school gates.",
       buttonLabel: "Join the alumni network",
       introEyebrow: "Our alumni community",
       introHeading: "Different paths.",
@@ -297,7 +317,7 @@ export const moreSections = {
       heading: "Your Agape story",
       headingAccent: "continues.",
       description:
-        "Tell us where life has taken you. We'll keep you updated about reunions and alumni events, and — if you agree — share your story with the Agape community.",
+        "Tell us where life has taken you. We'll keep you updated about reunions and alumni events and, if you agree, share your story with the Agape community.",
       thanks: "Thank you! We'll review your details and be in touch. If you chose to share your profile, it will appear on this page once approved.",
     },
   }),

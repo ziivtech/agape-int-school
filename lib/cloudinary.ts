@@ -135,3 +135,39 @@ export function getOptimizedCloudinaryUrl(
 }
 
 
+
+/**
+ * Upload a document (PDF, Word, Excel, PowerPoint…) as a Cloudinary "raw" file.
+ * Raw delivery keeps the original bytes and isn't subject to Cloudinary's
+ * PDF-delivery restriction on image uploads. The extension is kept in the
+ * public_id so the downloaded file opens correctly.
+ */
+export async function uploadDocumentToCloudinary(file: File): Promise<CloudinaryUploadResponse> {
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+  if (!cloudName || !uploadPreset) {
+    throw new Error("Cloudinary is not configured. Set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET.");
+  }
+
+  const dot = file.name.lastIndexOf(".");
+  const ext = dot > 0 ? file.name.slice(dot + 1).toLowerCase() : "";
+  const base = (dot > 0 ? file.name.slice(0, dot) : file.name)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60) || "file";
+  const stamp = Math.random().toString(36).slice(2, 6);
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", uploadPreset);
+  formData.append("public_id", `agape-academy/downloads/${base}-${stamp}${ext ? `.${ext}` : ""}`);
+  formData.append("tags", "aai-web,downloads");
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`, { method: "POST", body: formData });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data?.error?.message || `Upload failed (HTTP ${res.status})`);
+  }
+  return res.json();
+}

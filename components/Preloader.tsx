@@ -71,7 +71,7 @@ export default function Preloader({ minDurationMs = 1500, logoSrc }: PreloaderPr
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeInOut" } }}
         >
-          {/* Curtain panels — split and slide apart on exit for a more considered reveal than a plain fade */}
+          {/* Curtain panels: split and slide apart on exit for a more considered reveal than a plain fade */}
           <motion.div
             className="pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-[#19151C]"
             animate={exiting ? { x: "-100%" } : { x: 0 }}

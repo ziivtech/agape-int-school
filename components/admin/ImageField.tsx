@@ -56,7 +56,7 @@ export default function ImageField({
 
         <div className="min-w-0 flex-1 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            {placeholder && <Badge tone="amber">Stock photo — replace</Badge>}
+            {placeholder && <Badge tone="amber">Stock photo, please replace</Badge>}
             {isVideo && <Badge tone="purple">Video</Badge>}
             <span className="font-sans text-[11px] text-[#19151C]/45">
               {aspect} · ideally {DIMENSIONS[aspect] ?? "1600px wide"}

@@ -13,6 +13,7 @@ const photoSchema = z.object({
   url: linkSchema.refine((v) => v.length > 0, "Missing photo."),
   publicId: z.string().max(300).nullish(),
   sortOrder: z.number().int().default(0),
+  albumId: z.string().uuid().nullish(),
 });
 
 export const POST = handle(async (req: NextRequest) => {

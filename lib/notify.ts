@@ -56,7 +56,7 @@ export async function notifyNewAlumnus(a: { id: string; fullName: string; classY
   const text = [
     `${a.fullName}${a.classYear ? ` (class of ${a.classYear})` : ""} joined the alumni network.`,
     a.email ? `Email: ${a.email}` : "",
-    a.consentPublic ? "They are happy to appear on the website — review and approve their profile." : "They asked not to appear publicly.",
+    a.consentPublic ? "They are happy to appear on the website. Review and approve their profile." : "They asked not to appear publicly.",
     siteUrl ? `Review: ${siteUrl}/admin/alumni/${a.id}` : "",
   ]
     .filter(Boolean)

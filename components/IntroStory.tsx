@@ -22,7 +22,7 @@ export default function IntroStory() {
           transition={{ duration: 0.6 }}
           className="aspect-[4/5] w-full overflow-hidden rounded-2xl bg-[#19151C]/5 shadow-sm lg:order-2"
         >
-          {/* Editorial photograph — a teacher and students in conversation */}
+          {/* Editorial photograph: a teacher and students in conversation */}
           <Image
             src={c.photo.url || "/cover.jpg"}
             alt={c.photo.alt}

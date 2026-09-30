@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   CalendarDays,
   ExternalLink,
+  Download,
   FileText,
   GraduationCap,
   Image as ImageIcon,
@@ -29,6 +30,7 @@ const NAV = [
   { href: "/admin/news", label: "News", icon: Newspaper, area: "news" },
   { href: "/admin/events", label: "Events", icon: CalendarDays, area: "events" },
   { href: "/admin/alumni", label: "Alumni", icon: GraduationCap, area: "alumni" },
+  { href: "/admin/downloads", label: "Downloads", icon: Download, area: "downloads" },
   { href: "/admin/users", label: "Staff accounts", icon: Users, area: "users" },
 ];
 

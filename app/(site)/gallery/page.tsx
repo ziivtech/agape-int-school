@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import CampusGallery from "@/components/CampusGallery";
-import { getGalleryPhotos, getSection } from "@/lib/content/server";
+import AlbumGrid from "@/components/AlbumGrid";
+import { getGalleryPhotos, getPublishedAlbums, getSection } from "@/lib/content/server";
 
 export const metadata: Metadata = {
   title: "Gallery",
   description:
-    "A look inside life at Agape Academy International — classrooms, chapel, sport, the arts and the campus our students call home.",
+    "A look inside life at Agape Academy International: classrooms, chapel, sport, the arts and the campus our students call home.",
 };
 
 export default async function GalleryPage() {
-  const [c, photos] = await Promise.all([getSection("gallery.page"), getGalleryPhotos()]);
+  const [c, photos, albums] = await Promise.all([getSection("gallery.page"), getGalleryPhotos(), getPublishedAlbums()]);
 
   return (
     <main className="bg-[#FAF8F9]">
@@ -47,6 +48,16 @@ export default async function GalleryPage() {
           <p className="mt-6 max-w-xl font-sans text-lg leading-relaxed text-white/80">{c.description}</p>
         </div>
       </section>
+
+      {albums.length > 0 && (
+        <section className="px-6 pt-16 sm:px-10 sm:pt-20 lg:px-16">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="mb-8 font-serif text-3xl text-[#19151C] sm:text-4xl">Albums</h2>
+            <AlbumGrid albums={albums} />
+            <h2 className="mb-2 mt-20 font-serif text-3xl text-[#19151C] sm:text-4xl">Around campus</h2>
+          </div>
+        </section>
+      )}
 
       <CampusGallery
         photos={photos.map((p) => ({ id: p.id, category: p.category, title: p.title, caption: p.caption, src: p.url }))}

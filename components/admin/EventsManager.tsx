@@ -64,7 +64,7 @@ export default function EventsManager({ initial, categories }: { initial: Ev[]; 
         return next.sort((a, b) => (a.startsOn || "0").localeCompare(b.startsOn || "0"));
       });
       setEditing(null);
-      toast("success", "Event saved — the website is updated.");
+      toast("success", "Event saved. The website is updated.");
     } catch (err) {
       toast("error", err instanceof Error ? err.message : "Could not save.");
     } finally {

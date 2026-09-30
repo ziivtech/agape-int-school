@@ -401,13 +401,21 @@ export default function AdmissionsPage() {
                 <span className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-white/35">{fees.boxLabel}</span>
                 <p className="mt-2 font-serif text-2xl">{fees.boxTitle}</p>
               </div>
-              <Link
-                href="#apply-form"
-                className="inline-flex h-12 items-center justify-center gap-3 rounded-full bg-white px-6 font-sans text-sm font-semibold text-[#19151C] transition hover:bg-[#E12F41] hover:text-white"
-              >
-                {fees.buttonLabel}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/downloads"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/20 px-6 font-sans text-sm font-semibold text-white transition hover:bg-white/10"
+                >
+                  Prospectus & fee documents
+                </Link>
+                <Link
+                  href="#apply-form"
+                  className="inline-flex h-12 items-center justify-center gap-3 rounded-full bg-white px-6 font-sans text-sm font-semibold text-[#19151C] transition hover:bg-[#E12F41] hover:text-white"
+                >
+                  {fees.buttonLabel}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
           </FadeUp>
         </div>

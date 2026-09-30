@@ -49,8 +49,8 @@ export async function readSessionToken(token: string | undefined): Promise<Sessi
 
 /* Which admin areas each role may use. */
 export const ROLE_ACCESS: Record<Role, string[]> = {
-  admin: ["dashboard", "content", "media", "news", "events", "alumni", "enquiries", "users"],
-  editor: ["dashboard", "content", "media", "news", "events", "alumni"],
+  admin: ["dashboard", "content", "media", "news", "events", "alumni", "downloads", "enquiries", "users"],
+  editor: ["dashboard", "content", "media", "news", "events", "alumni", "downloads"],
   admissions: ["dashboard", "enquiries"],
 };
 

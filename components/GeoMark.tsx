@@ -6,7 +6,7 @@ type GeoMarkProps = {
 
 /**
  * A restrained geometric device echoing the AAI logo's nested pattern.
- * Used sparingly as a watermark on dark sections, dividers and the footer —
+ * Used sparingly as a watermark on dark sections, dividers and the footer,
  * never as a repeating background texture.
  */
 export default function GeoMark({

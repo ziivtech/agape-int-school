@@ -1,5 +1,5 @@
 import { unstable_cache, revalidateTag } from "next/cache";
-import { and, asc, desc, eq, gte, isNull, or } from "drizzle-orm";
+import { and, asc, desc, eq, gte, isNull, or, sql } from "drizzle-orm";
 import { getDb, schema } from "../db";
 import { SECTIONS, SectionKey, SectionData, getSectionDef } from "./registry";
 import { mergeSection } from "./fields";
@@ -125,9 +125,11 @@ export const getGalleryPhotos = unstable_cache(
     const db = getDb();
     if (!db) return [];
     try {
+      // Album photos live on their album pages; this is the general gallery.
       const rows = await db
         .select()
         .from(schema.galleryPhotos)
+        .where(isNull(schema.galleryPhotos.albumId))
         .orderBy(asc(schema.galleryPhotos.sortOrder), desc(schema.galleryPhotos.createdAt));
       return rows.map((r) => ({ ...r, url: getOptimizedCloudinaryUrl(r.url) }));
     } catch (err) {
@@ -194,4 +196,127 @@ export const getPublishedAlumni = unstable_cache(
   },
   ["alumni-published"],
   { tags: [ALUMNI_TAG] }
+);
+
+/* ---------------------------------------------------------------
+   Downloads centre
+--------------------------------------------------------------- */
+
+export const DOWNLOADS_TAG = "downloads";
+
+export const getPublishedDownloads = unstable_cache(
+  async () => {
+    const db = getDb();
+    if (!db) return [];
+    try {
+      return await db
+        .select()
+        .from(schema.downloads)
+        .where(eq(schema.downloads.published, true))
+        .orderBy(asc(schema.downloads.category), asc(schema.downloads.sortOrder), desc(schema.downloads.updatedAt));
+    } catch (err) {
+      console.error("Failed to load downloads", err);
+      return [];
+    }
+  },
+  ["downloads-published"],
+  { tags: [DOWNLOADS_TAG] }
+);
+
+/* ---------------------------------------------------------------
+   Photo albums
+--------------------------------------------------------------- */
+
+export interface AlbumCard {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  date: string | null;
+  coverUrl: string;
+  photoCount: number;
+  eventId: string | null;
+  newsPostId: string | null;
+}
+
+/** Published albums that have at least one photo, newest first. */
+export const getPublishedAlbums = unstable_cache(
+  async (): Promise<AlbumCard[]> => {
+    const db = getDb();
+    if (!db) return [];
+    try {
+      const rows = await db
+        .select({
+          a: schema.albums,
+          photoCount: sql<number>`count(${schema.galleryPhotos.id})::int`,
+          firstPhoto: sql<string | null>`(array_agg(${schema.galleryPhotos.url} order by ${schema.galleryPhotos.sortOrder}, ${schema.galleryPhotos.createdAt}))[1]`,
+        })
+        .from(schema.albums)
+        .innerJoin(schema.galleryPhotos, eq(schema.galleryPhotos.albumId, schema.albums.id))
+        .where(eq(schema.albums.published, true))
+        .groupBy(schema.albums.id)
+        .orderBy(sql`${schema.albums.date} desc nulls last`, desc(schema.albums.createdAt));
+      return rows.map(({ a, photoCount, firstPhoto }) => ({
+        id: a.id,
+        slug: a.slug,
+        title: a.title,
+        description: a.description,
+        date: a.date,
+        coverUrl: getOptimizedCloudinaryUrl(a.coverUrl || firstPhoto || ""),
+        photoCount,
+        eventId: a.eventId,
+        newsPostId: a.newsPostId,
+      }));
+    } catch (err) {
+      console.error("Failed to load albums", err);
+      return [];
+    }
+  },
+  ["albums-published"],
+  { tags: [GALLERY_TAG] }
+);
+
+export const getAlbumPhotos = unstable_cache(
+  async (albumId: string) => {
+    const db = getDb();
+    if (!db) return [];
+    const rows = await db
+      .select()
+      .from(schema.galleryPhotos)
+      .where(eq(schema.galleryPhotos.albumId, albumId))
+      .orderBy(asc(schema.galleryPhotos.sortOrder), asc(schema.galleryPhotos.createdAt));
+    return rows.map((r) => ({ ...r, url: getOptimizedCloudinaryUrl(r.url) }));
+  },
+  ["album-photos"],
+  { tags: [GALLERY_TAG] }
+);
+
+/* ---------------------------------------------------------------
+   Calendar: published events from the last year onwards
+--------------------------------------------------------------- */
+
+export const getCalendarEvents = unstable_cache(
+  async () => {
+    const db = getDb();
+    if (!db) return [];
+    try {
+      const since = new Date();
+      since.setFullYear(since.getFullYear() - 1);
+      return await db
+        .select()
+        .from(schema.events)
+        .where(
+          and(
+            eq(schema.events.status, "published"),
+            or(isNull(schema.events.startsOn), gte(schema.events.startsOn, since.toISOString().slice(0, 10)))
+          )
+        )
+        .orderBy(asc(schema.events.startsOn));
+    } catch (err) {
+      console.error("Failed to load calendar", err);
+      return [];
+    }
+  },
+  ["events-calendar"],
+  { tags: [EVENTS_TAG], revalidate: 3600 }
 );

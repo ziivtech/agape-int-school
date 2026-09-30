@@ -55,7 +55,7 @@ export const academicsSections = {
   "academics.stages": defineSection({
     page: "Academics",
     label: "3. School stages",
-    description: "Keep the “Anchor” values as they are — the menu links to them.",
+    description: "Keep the “Anchor” values as they are, because the menu links to them.",
     fields: [
       ...headingFields,
       {
@@ -198,7 +198,7 @@ export const academicsSections = {
       heading: "Excellence in",
       headingAccent: "Christian education.",
       intro:
-        "At Agape Academy International, our academic programme is built around the Abeka curriculum — combining rigorous academics with a Christian worldview and a strong foundation in character.",
+        "At Agape Academy International, our academic programme is built around the Abeka curriculum, combining rigorous academics with a Christian worldview and a strong foundation in character.",
       photo: img("/abek.jpg", "Abeka curriculum at Agape Academy International"),
       photoBadge: "Abeka Curriculum",
       whyEyebrow: "Why Abeka",

@@ -80,7 +80,7 @@ export const studentLifeSections = {
   "studentLife.activities": defineSection({
     page: "Student Life",
     label: "4. Activities",
-    description: "Each activity links to its own page. Keep the anchors as they are — the menu links to them.",
+    description: "Each activity links to its own page. Keep the anchors as they are, because the menu links to them.",
     fields: [
       ...headingFields,
       { name: "description", label: "Paragraph", type: "textarea" },

@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
-import { CalendarDays, Clock3, Download, MapPin } from "lucide-react";
+import { Download } from "lucide-react";
+import EventsCalendar from "@/components/events/EventsCalendar";
 import GeoMark from "@/components/GeoMark";
-import { getSection, getUpcomingEvents } from "@/lib/content/server";
-import { formatEventDate, toEventItem } from "@/lib/content/public-types";
+import { getCalendarEvents, getPublishedAlbums, getSection } from "@/lib/content/server";
+import { toEventItem } from "@/lib/content/public-types";
 
 export const metadata: Metadata = {
   title: "Events",
-  description: "Upcoming events at Agape Academy International — sports days, fairs, trips, parent meetings and celebrations.",
+  description: "Upcoming events at Agape Academy International: sports days, fairs, trips, parent meetings and celebrations.",
 };
 
 export default async function EventsPage() {
-  const [c, rows] = await Promise.all([getSection("events.page"), getUpcomingEvents()]);
+  const [c, rows, albums] = await Promise.all([getSection("events.page"), getCalendarEvents(), getPublishedAlbums()]);
   const events = rows.map(toEventItem);
+  const albumByEvent = Object.fromEntries(albums.filter((a) => a.eventId).map((a) => [a.eventId!, a.slug]));
 
   return (
     <main className="bg-[#FAF8F9]">
@@ -35,52 +37,10 @@ export default async function EventsPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-6 py-16 sm:px-10 sm:py-20">
-        {events.length === 0 ? (
-          <p className="font-sans text-[#19151C]/60">{c.emptyText}</p>
-        ) : (
-          <ol className="divide-y divide-[#19151C]/10 border-y border-[#19151C]/10">
-            {events.map((e) => (
-              <li key={e.id} className="grid gap-5 py-8 sm:grid-cols-[180px_1fr] sm:gap-10">
-                <div>
-                  <p className="font-sans text-xs font-semibold uppercase tracking-[0.15em] text-[#E12F41]">{e.category}</p>
-                  <p className="mt-2 font-serif text-xl text-[#19151C]">{formatEventDate(e)}</p>
-                </div>
-                <div>
-                  <h2 className="font-serif text-2xl text-[#19151C] sm:text-3xl">{e.title}</h2>
-                  {(e.timeLabel || e.location) && (
-                    <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 font-sans text-sm text-[#19151C]/55">
-                      {e.timeLabel && (
-                        <span className="inline-flex items-center gap-1.5">
-                          <Clock3 size={14} />
-                          {e.timeLabel}
-                        </span>
-                      )}
-                      {e.location && (
-                        <span className="inline-flex items-center gap-1.5">
-                          <MapPin size={14} />
-                          {e.location}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  {e.description && (
-                    <p className="mt-4 whitespace-pre-line font-sans leading-relaxed text-[#19151C]/70">{e.description}</p>
-                  )}
-                  {e.imageUrl && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={e.imageUrl} alt={e.title} className="mt-6 aspect-[16/9] w-full rounded-xl object-cover" />
-                  )}
-                </div>
-              </li>
-            ))}
-          </ol>
-        )}
+      <section className="mx-auto max-w-5xl px-6 py-14 sm:px-10 sm:py-20">
+        <EventsCalendar events={events} albumByEvent={albumByEvent} emptyText={c.emptyText} />
 
-        <p className="mt-10 inline-flex items-center gap-2 font-sans text-sm text-[#19151C]/50">
-          <CalendarDays size={15} />
-          Dates may change — the school will confirm details with families.
-        </p>
+        <p className="mt-12 font-sans text-sm text-[#19151C]/50">Dates may change. The school will confirm details with families.</p>
       </section>
     </main>
   );

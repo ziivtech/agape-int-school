@@ -101,7 +101,7 @@ export default function EnquiryForm({
     return (
       <div className="flex flex-col items-center rounded-xl bg-[#6C0798]/5 px-6 py-12 text-center">
         <CheckCircle2 className="h-10 w-10 text-[#6C0798]" strokeWidth={1.5} />
-        <p className="mt-5 font-serif text-2xl text-[#19151C]">Thank you — we&apos;ve received your message.</p>
+        <p className="mt-5 font-serif text-2xl text-[#19151C]">Thank you, we&apos;ve received your message.</p>
         <p className="mt-2 max-w-sm font-sans text-sm leading-6 text-[#19151C]/55">
           A member of our team will get back to you soon.
         </p>
@@ -111,7 +111,7 @@ export default function EnquiryForm({
 
   return (
     <form onSubmit={onSubmit} className="space-y-4 text-left sm:space-y-5">
-      {/* Honeypot — hidden from people, tempting to bots */}
+      {/* Honeypot: hidden from people, tempting to bots */}
       <div className="hidden" aria-hidden="true">
         <label>
           Website

@@ -54,7 +54,7 @@ export default async function AlumniAdminPage({ searchParams }: { searchParams: 
     <>
       <PageHeader
         title="Alumni"
-        description="Profiles for the alumni directory. Past students who sign up on the website wait here for approval — nothing appears publicly until you publish it, and only if they agreed to be shown."
+        description="Profiles for the alumni directory. Past students who sign up on the website wait here for approval. Nothing appears publicly until you publish it, and only if they agreed to be shown."
         actions={
           <Link
             href="/admin/alumni/new"
@@ -117,7 +117,7 @@ export default async function AlumniAdminPage({ searchParams }: { searchParams: 
                       {a.classYear && <span className="font-normal text-[#19151C]/50"> · Class of {a.classYear}</span>}
                     </p>
                     <p className="truncate font-sans text-xs text-[#19151C]/50">
-                      {a.headline || a.occupation || a.university || a.email || "—"}
+                      {a.headline || a.occupation || a.university || a.email || "No details yet"}
                     </p>
                   </div>
                   <div className="hidden flex-wrap justify-end gap-1.5 sm:flex">

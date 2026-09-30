@@ -221,7 +221,7 @@ export default function SectionEditor({
       setData(res.data);
       setSaved(JSON.stringify(res.data));
       setIsCustom(true);
-      toast("success", "Saved — the website is updated.");
+      toast("success", "Saved. The website is updated.");
       router.refresh();
     } catch (err) {
       toast("error", err instanceof Error ? err.message : "Could not save.");

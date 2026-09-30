@@ -165,7 +165,7 @@ export const homeSections = {
       eyebrow: "Academics",
       heading: "Curious minds. Confident learners.",
       description:
-        "A broad, rigorous curriculum that builds real understanding — across the sciences, the humanities, languages and the arts — and prepares students for what comes after Agape.",
+        "A broad, rigorous curriculum that builds real understanding across the sciences, the humanities, languages and the arts, and prepares students for what comes after Agape.",
       subjects: ["Mathematics", "Science", "English", "Humanities", "Languages", "ICT", "Creative Arts", "Bible", "University Preparation"],
       stats: [] as { value: string; label: string }[],
     },
@@ -185,7 +185,7 @@ export const homeSections = {
       eyebrow: "Faith & character",
       heading: "Rooted in faith. Prepared for the world.",
       description:
-        "Christian education at Agape is not a single subject on the timetable — it shapes how students treat one another, how they lead, and how they understand their responsibility to others.",
+        "Christian education at Agape is not a single subject on the timetable. It shapes how students treat one another, how they lead, and how they understand their responsibility to others.",
       values: ["Biblical values", "Character development", "Chapel", "Prayer", "Service", "Leadership", "Integrity", "Compassion", "Responsibility"],
       buttonLabel: "Our faith & values",
       buttonUrl: "/about#values",
@@ -273,7 +273,7 @@ export const homeSections = {
     defaults: {
       eyebrow: "Wellbeing",
       heading: "Known. Supported. Encouraged.",
-      description: "Every student at Agape is known by name — not just by their teachers, but by a wider community invested in their growth.",
+      description: "Every student at Agape is known by name, not just by their teachers but by a wider community invested in their growth.",
       photo: img("/together.jpg", "Students connecting on campus"),
       areas: ["Pastoral care", "Student support", "Teacher relationships", "Safeguarding", "Mental wellbeing", "Community & belonging"],
     },
@@ -406,7 +406,7 @@ export const homeSections = {
       heading: "Parent stories",
       parents: [
         {
-          quote: "Our daughter has grown so much in confidence — not just in the classroom, but in how she treats other people.",
+          quote: "Our daughter has grown so much in confidence, not just in the classroom but in how she treats other people.",
           name: "Agape Parent",
           relation: "Parent of a Grade 6 student",
           photo: img("", ""),
@@ -452,7 +452,7 @@ export const homeSections = {
       heading: "Education is about who we help students become.",
       photo: img("/girl_grad.jpg", "Principal, Agape Academy International"),
       message:
-        "Every student who walks through our gates carries a story still being written. Our task is not only to prepare them for examinations, but to help them become people of character, conviction and purpose — ready to serve Ghana and the world beyond it.",
+        "Every student who walks through our gates carries a story still being written. Our task is not only to prepare them for examinations, but to help them become people of character, conviction and purpose, ready to serve Ghana and the world beyond it.",
       signature: "Principal, Agape Academy International",
       linkLabel: "Meet our leadership",
     },

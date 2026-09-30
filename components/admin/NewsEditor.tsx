@@ -54,7 +54,7 @@ export default function NewsEditor({ post, categories, defaultAuthor }: { post?:
         json: p.id ? { ...payload, id: p.id } : payload,
       });
       setP((x) => ({ ...x, id: res.post.id, slug: res.post.slug, status }));
-      toast("success", status === "published" ? "Published — it's live on the website." : "Draft saved.");
+      toast("success", status === "published" ? "Published. It's live on the website." : "Draft saved.");
       if (!p.id) router.replace(`/admin/news/${res.post.id}`);
       router.refresh();
     } catch (err) {

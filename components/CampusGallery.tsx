@@ -25,11 +25,21 @@ const FALLBACK: GalleryImage[] = [
   { id: "f9", category: "Classrooms", title: "In conversation", caption: "A teacher with students.", src: "/cover.jpg" },
 ];
 
-export default function CampusGallery({ photos }: { photos: GalleryImage[] }) {
+export default function CampusGallery({
+  photos,
+  useFallback = true,
+  bare = false,
+}: {
+  photos: GalleryImage[];
+  /** Show the school's built-in photos when there are none (general gallery only). */
+  useFallback?: boolean;
+  /** Drop the section padding (when embedded in another page). */
+  bare?: boolean;
+}) {
   const [active, setActive] = useState<string>("All");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const prefersReducedMotion = useReducedMotion();
-  const galleryImages = photos.length > 0 ? photos : FALLBACK;
+  const galleryImages = photos.length > 0 || !useFallback ? photos : FALLBACK;
   // Only offer filters for categories that actually have photos.
   const categories = useMemo(
     () => Array.from(new Set(galleryImages.map((img) => img.category))),
@@ -55,8 +65,9 @@ export default function CampusGallery({ photos }: { photos: GalleryImage[] }) {
   }, [openIndex, filtered.length]);
 
   return (
-    <section className="px-6 py-16 sm:px-10 sm:py-20 lg:px-16">
+    <section className={bare ? "" : "px-6 py-16 sm:px-10 sm:py-20 lg:px-16"}>
       {/* Category filter */}
+      {categories.length > 1 && (
       <div className="mx-auto mb-10 flex max-w-6xl flex-wrap gap-2">
         <button
           onClick={() => setActive("All")}
@@ -68,7 +79,7 @@ export default function CampusGallery({ photos }: { photos: GalleryImage[] }) {
         >
           All
         </button>
-        {categories.length > 1 && categories.map((cat) => (
+        {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActive(cat)}
@@ -82,6 +93,7 @@ export default function CampusGallery({ photos }: { photos: GalleryImage[] }) {
           </button>
         ))}
       </div>
+      )}
 
       {/* Grid */}
       <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">

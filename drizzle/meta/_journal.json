@@ -15,6 +15,20 @@
       "when": 1790689087454,
       "tag": "0001_alumni",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790757139756,
+      "tag": "0002_downloads",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790758349708,
+      "tag": "0003_albums",
+      "breakpoints": true
     }
   ]
 }

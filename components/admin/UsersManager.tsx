@@ -107,7 +107,7 @@ export default function UsersManager({ initial, currentUserId }: { initial: User
               <select className={inputClass} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as Role })}>
                 {ROLES.map((r) => (
                   <option key={r.value} value={r.value}>
-                    {r.label} — {r.help}
+                    {r.label}: {r.help}
                   </option>
                 ))}
               </select>

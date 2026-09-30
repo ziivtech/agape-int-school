@@ -80,7 +80,7 @@ export default function AlumniEditor({ initial, industries }: { initial?: Profil
       setP((x) => ({ ...x, id: alumnus.id, slug: alumnus.slug, status }));
       toast(
         "success",
-        status === "published" ? "Published — the profile is on the website." : status === "hidden" ? "Hidden from the website." : "Saved."
+        status === "published" ? "Published. The profile is on the website." : status === "hidden" ? "Hidden from the website." : "Saved."
       );
       if (!p.id) router.replace(`/admin/alumni/${alumnus.id}`);
       router.refresh();
@@ -146,7 +146,7 @@ export default function AlumniEditor({ initial, industries }: { initial?: Profil
               <div>
                 <label className={labelClass}>Field</label>
                 <select className={inputClass} value={p.industry} onChange={(e) => set("industry", e.target.value)}>
-                  <option value="">—</option>
+                  <option value="">Choose one</option>
                   {industries.map((i) => (
                     <option key={i}>{i}</option>
                   ))}

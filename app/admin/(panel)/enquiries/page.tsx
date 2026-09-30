@@ -162,12 +162,12 @@ export default async function EnquiriesPage({ searchParams }: { searchParams: Se
                     </td>
                     <td className="px-3 py-3 font-normal text-[#19151C]/70">{e.subject ?? TYPE_LABELS[e.type]}</td>
                     <td className="px-3 py-3 font-normal text-[#19151C]/70">
-                      {[e.studentName, e.gradeOfInterest].filter(Boolean).join(" · ") || "—"}
+                      {[e.studentName, e.gradeOfInterest].filter(Boolean).join(" · ") || "Not given"}
                     </td>
                     <td className="px-3 py-3">
                       <Badge tone={STATUS_TONE[e.status]}>{STATUS_LABELS[e.status]}</Badge>
                     </td>
-                    <td className="px-3 py-3 font-normal text-[#19151C]/60">{owner ?? "—"}</td>
+                    <td className="px-3 py-3 font-normal text-[#19151C]/60">{owner ?? "Unassigned"}</td>
                     <td className="px-5 py-3 text-right font-normal text-[#19151C]/50">{timeAgo(e.createdAt)}</td>
                   </tr>
                 ))}

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { getNewsBySlug, getPublishedNews } from "@/lib/content/server";
+import CampusGallery from "@/components/CampusGallery";
+import { getAlbumPhotos, getNewsBySlug, getPublishedAlbums, getPublishedNews } from "@/lib/content/server";
 import { formatNewsDate, toNewsCard } from "@/lib/content/public-types";
 
 type Props = { params: { slug: string } };
@@ -45,6 +46,8 @@ export default async function NewsArticlePage({ params }: Props) {
   if (!row) notFound();
   const post = toNewsCard(row);
   const more = (await getPublishedNews(4)).map(toNewsCard).filter((p) => p.slug !== post.slug).slice(0, 3);
+  const album = (await getPublishedAlbums()).find((a) => a.newsPostId === row.id);
+  const albumPhotos = album ? await getAlbumPhotos(album.id) : [];
 
   return (
     <main className="bg-[#FAF8F9] text-[#19151C]">
@@ -75,6 +78,24 @@ export default async function NewsArticlePage({ params }: Props) {
           <StoryBody body={post.body} />
         </div>
       </article>
+
+      {album && albumPhotos.length > 0 && (
+        <section className="px-6 pb-16 sm:px-10 lg:px-16">
+          <div className="mx-auto max-w-5xl">
+            <div className="mb-6 flex items-end justify-between gap-4">
+              <h2 className="font-serif text-3xl">Photos</h2>
+              <Link href={`/gallery/${album.slug}`} className="font-sans text-sm font-medium text-[#6C0798] hover:underline">
+                Open the full album ({album.photoCount})
+              </Link>
+            </div>
+            <CampusGallery
+              bare
+              useFallback={false}
+              photos={albumPhotos.slice(0, 12).map((p) => ({ id: p.id, category: album.title, title: p.caption || p.title, caption: p.caption, src: p.url }))}
+            />
+          </div>
+        </section>
+      )}
 
       {more.length > 0 && (
         <section className="border-t border-[#19151C]/10 bg-white px-6 py-16 sm:px-10 lg:px-16">
