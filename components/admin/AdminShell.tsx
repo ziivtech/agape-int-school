@@ -20,6 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { ToastProvider } from "./ui";
+import { AppBadge, InstallAppButton } from "./PwaSupport";
 import type { Role } from "../../lib/auth/session";
 
 const NAV = [
@@ -88,6 +89,7 @@ export default function AdminShell({
 
   const footer = (
     <div className="border-t border-[#19151C]/10 pt-4">
+      <InstallAppButton />
       <Link href="/admin/account" onClick={() => setOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-[#19151C]/5">
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#6C0798]/10 font-sans text-xs font-semibold text-[#6C0798]">
           {user.name
@@ -123,6 +125,7 @@ export default function AdminShell({
 
   return (
     <ToastProvider>
+      <AppBadge count={newEnquiries} />
       <div className="min-h-screen bg-[#F6F4F7] text-[#19151C]">
         {/* Desktop sidebar */}
         <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-[#19151C]/10 bg-white px-4 py-5 lg:flex">
@@ -139,7 +142,7 @@ export default function AdminShell({
         </aside>
 
         {/* Mobile top bar */}
-        <header className="sticky top-0 z-40 flex items-center justify-between border-b border-[#19151C]/10 bg-white px-4 py-3 lg:hidden">
+        <header className="sticky top-0 z-40 flex items-center justify-between border-b border-[#19151C]/10 bg-white px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] lg:hidden">
           <Link href="/admin" className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/school_logo.png" alt="" className="h-8 w-8 object-contain" />
